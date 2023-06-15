@@ -17,18 +17,25 @@ public class Money implements Expression {
         return currency;
     }
 
-    public static Money dollar(int amount) {
+    public static Money dollar(int amount){
         return new Money(amount, "USD");
     }
 
-    public static Money franc(int amount) {
+    public static Money franc(int amount){
         return new Money(amount, "CHF");
     }
 
-    public boolean equals(Object obj) {
-        Money money = (Money) obj;
+    public boolean equals(Object object) {
+        Money money = (Money) object;
         return amount == money.amount
                 && this.currency == money.currency;
+    }
+
+    @Override
+    public Money reduce(Bank bank, String to){
+        //return this;
+        //int rate = (currency.equals("CHF") && to.equals("USD")) ? 2 : 1;
+        return new Money(amount / bank.rate(this.currency, to), to);
     }
 
     @Override
@@ -43,7 +50,7 @@ public class Money implements Expression {
         return new Money(amount * multiplier, this.currency);
     }
 
-    public Expression plus(Money addend) {
-        return new Money(amount + addend.amount, currency);
+    public Expression plus(Money addend){
+        return new Sum(this, addend);
     }
 }
