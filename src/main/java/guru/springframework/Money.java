@@ -1,9 +1,5 @@
 package guru.springframework;
 
-
-/**
- * Created by jt on 2018-10-05.
- */
 public class Money implements Expression {
     protected int amount;
     protected String currency;
@@ -33,8 +29,6 @@ public class Money implements Expression {
 
     @Override
     public Money reduce(Bank bank, String to){
-        //return this;
-        //int rate = (currency.equals("CHF") && to.equals("USD")) ? 2 : 1;
         return new Money(amount / bank.rate(this.currency, to), to);
     }
 
@@ -46,11 +40,13 @@ public class Money implements Expression {
                 '}';
     }
 
-    public Money times(int multiplier) {
+    @Override
+    public Expression times(int multiplier) {
         return new Money(amount * multiplier, this.currency);
     }
 
-    public Expression plus(Money addend){
+    @Override
+    public Expression plus(Expression addend){
         return new Sum(this, addend);
     }
 }
